@@ -7,7 +7,7 @@ elseif(UNIX)
     set(CMAKE_PREFIX_PATH /vcpkg/ports/cppwork/vcpkg_installed/x64-linux/share)
 endif(APPLE)
 
-project(02_macro)
+project(06_deduction)
 
 add_definitions(-std=c++17)
 
