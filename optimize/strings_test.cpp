@@ -57,8 +57,16 @@ std::string remove_ctrl_reserve(std::string s) {
     return result;
 }
 
-// TODO: add remove_ctrl_reserve_it  test
-
+std::string remove_ctrl_reserve_it(std::string s) {
+    std::string result;
+    result.reserve(s.length());
+    for(auto it=s.begin(), end=s.end(); it!=end; ++it) {
+        if(*it >= 0x20) {
+            result += *it;
+        }
+    }
+    return result;
+}
 
 int test_strings(int test_no, unsigned long multiplier) {
     using counter_t = unsigned;
@@ -91,6 +99,8 @@ int test_strings(int test_no, unsigned long multiplier) {
             result = remove_ctrl_mutating_it_end(s);
             rc &= (result.compare(test) == 0);
             result = remove_ctrl_reserve(s);
+            rc &= (result.compare(test) == 0);
+            result = remove_ctrl_reserve_it(s);
             rc &= (result.compare(test) == 0);
             break;
         }
@@ -130,6 +140,14 @@ int test_strings(int test_no, unsigned long multiplier) {
             StopWatch sw("remove_ctrl_reserve()");
             for(counter_t i=0; i<iterations; ++i) {
                 result = remove_ctrl_reserve(s);
+            }
+        }
+
+        {
+            // reserve 对iterator来说，效果不是特别好
+            StopWatch sw("remove_ctrl_reserve_it()");
+            for(counter_t i=0; i<iterations; ++i) {
+                result = remove_ctrl_reserve_it(s);
             }
         }
 
