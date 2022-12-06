@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.3)
 
 
-project(2_activity)
+project(4_datetime)
 
 set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:/usr/local/lib/pkgconfig/")
 
