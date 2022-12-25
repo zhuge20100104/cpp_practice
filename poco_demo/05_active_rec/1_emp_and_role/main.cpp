@@ -91,3 +91,5 @@ TEST_F(SQLiteTestSuites, TestInsert) {
 
 	ASSERT_TRUE (pSeniorDeveloper->id() == 2);
 }
+
+// TODO: Add find test
