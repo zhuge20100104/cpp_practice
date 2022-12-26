@@ -151,8 +151,67 @@ TEST_F(SQLiteTestSuites, TestUpdate) {
 	ASSERT_TRUE(pRole->description() == "Junior developer role");
 }
 
-// TODO: Add Test Delete code
-TEST_F(SQLiteTestSuites, TestDelete) {
 
+TEST_F(SQLiteTestSuites, TestDelete) {
+	createTable();
+	Poco::Data::Session session(s_connect, s_db);
+	Context::Ptr pContext = new Context(session);
+	createRoles(pContext);
+
+	Role::Ptr pRole = Role::find(pContext, 1);
+	ASSERT_TRUE(!pRole.isNull());
+
+	pRole->remove();
+	pRole = Role::find(pContext, 1);
+	ASSERT_TRUE(pRole.isNull());
 }
 
+TEST_F(SQLiteTestSuites, TestRelations) {
+	createTable();
+	Poco::Data::Session session(s_connect, s_db);
+	Context::Ptr pContext = new Context(session);
+	
+	createRoles(pContext);
+	Employee::Ptr pManager = new Employee(Poco::UUIDGenerator().createOne());
+	pManager->name("Bill Lumbergh").ssn("23452343").roleID(3);
+	pManager->create(pContext);
+
+	Role::Ptr pManagerRole = pManager->role();
+	ASSERT_FALSE(pManagerRole.isNull());
+	ASSERT_TRUE(pManagerRole->id() == 3);
+
+	Employee::Ptr pEmployee = new Employee(Poco::UUIDGenerator().createOne());
+	pEmployee->name("Michael Bolton").ssn("123987123").roleID(2).manager(pManager);
+	pEmployee->create(pContext);
+	ASSERT_TRUE(pEmployee->managerID() == pManager->id());
+}
+
+TEST_F(SQLiteTestSuites, TestQuery) {
+	createTable();
+	Poco::Data::Session session(s_connect, s_db);
+	Context::Ptr pContext = new Context(session);
+
+	createRoles(pContext);
+	Query<Role> query(pContext);
+	auto result = query.execute();
+	ASSERT_TRUE(result.size() == 3);
+}
+
+TEST_F(SQLiteTestSuites, TestQueryWhere) {
+	createTable();
+	Poco::Data::Session session(s_connect, s_db);
+	Context::Ptr pContext = new Context(session);
+	createRoles(pContext);
+
+	Query<Role> query(pContext);
+	query.where("name = 'Senior Developer'");
+
+	auto result = query.execute();
+	ASSERT_TRUE(result.size() == 1);
+	ASSERT_TRUE(result[0]->name() == "Senior Developer");
+}
+
+// TODO: Add test query where bind code
+TEST_F(SQLiteTestSuites, TestQueryWhereBind) {
+
+}
