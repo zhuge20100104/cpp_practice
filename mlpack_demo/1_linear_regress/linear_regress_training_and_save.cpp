@@ -15,5 +15,7 @@ int main(int argc, char* argv[]) {
     std::cout << "response: " <<  responses << std::endl;
     arma::vec parameters = lr.Parameters();
     std::cout << "parameters: " <<  parameters << std::endl;
+
+    data::Save("lr_model.xml", "lr_model", lr, false);
     return EXIT_SUCCESS;
 }
