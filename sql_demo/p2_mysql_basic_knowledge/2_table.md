@@ -24,4 +24,8 @@
     show create table student;
 ```
 
-## 删除表 30页 TODO:
+## 删除表
+
+```shell
+    drop table student;
+```
