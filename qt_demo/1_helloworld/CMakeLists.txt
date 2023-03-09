@@ -1,25 +1,29 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.5)
 
+project(1_hello_world VERSION 0.1 LANGUAGES CXX)
 
-project(1_image_show_read)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:/usr/local/lib/pkgconfig/")
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
-set ( CMAKE_CXX_FLAGS "-pthread")
 set(CMAKE_CXX_STANDARD 17)
-add_definitions(-g)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+
 conan_basic_setup()
 
-include_directories(${INCLUDE_DIRS})
-LINK_DIRECTORIES(${LINK_DIRS})
+set(PROJECT_SOURCES
+        main.cpp
+)
 
-file( GLOB main_file_list ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp) 
+add_executable(1_hello_world
+            ${PROJECT_SOURCES}
+        )
 
-foreach( main_file ${main_file_list} )
-    file(RELATIVE_PATH filename ${CMAKE_CURRENT_SOURCE_DIR} ${main_file})
-    string(REPLACE ".cpp" "" file ${filename})
-    add_executable(${file}  ${main_file})
-    target_link_libraries(${file} ${CONAN_LIBS} pthread)
-endforeach( main_file ${main_file_list})
+target_link_libraries(1_hello_world  Qt${QT_VERSION_MAJOR}::Widgets ${CONAN_LIBS})
