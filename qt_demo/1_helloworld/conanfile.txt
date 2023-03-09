@@ -1,0 +1,6 @@
+[requires]
+ opencv/4.5.5
+ qt/5.15.8
+
+[generators]
+cmake
